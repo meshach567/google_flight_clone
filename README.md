@@ -63,3 +63,52 @@ flight-search/
 ├── tailwind.config.js
 └── vite.config.ts
 ```
+
+### .github/workflows/ci.yml
+```yaml
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+```
+
+### services/flightApi.ts
+```typescript
+import axios from 'axios';
+
+const RAPID_API_KEY = import.meta.env.VITE_RAPID_API_KEY;
+const RAPID_API_HOST = 'sky-scrapper.p.rapidapi.com';
+
+export const searchFlights = async (params: {
+  from: string;
+  to: string;
+  date: string;
+}) => {
+  try {
+    const response = await axios.get('/flights', {
+      baseURL: 'https://sky-scrapper.p.rapidapi.com/api/v1',
+      headers: {
+        'X-RapidAPI-Key': RAPID_API_KEY,
+        'X-RapidAPI-Host': RAPID_API_HOST
+      },
+      params
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Flight search error', error);
+    throw error;
+  }
+};
+```
