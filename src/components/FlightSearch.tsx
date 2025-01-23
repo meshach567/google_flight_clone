@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import  useFlightSearch  from "../hooks/useFlightSearch";
+import {useFlightSearch} from "../hooks/useFlightSearch";
+import {GoogleFlightLeg} from "../types/googleflight";
 
 const FlightSearch: React.FC = () => {
   const [origin, setOrigin] = useState("");
@@ -8,8 +9,15 @@ const FlightSearch: React.FC = () => {
 
   const {performSearch, flights, isLoading} = useFlightSearch();
 
-  const handleSearch = () => {
-    performSearch({origin, destination, departureDate});
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const legs: GoogleFlightLeg = {
+      origin,
+      destination,
+      date: departureDate,
+    };
+    performSearch([legs]);
   };
   return (
     <div className="container mx-auto p-4">
@@ -40,7 +48,7 @@ const FlightSearch: React.FC = () => {
             className="border p-2 rounded"
           />
         </div>
-        
+
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Departure Date
@@ -57,25 +65,36 @@ const FlightSearch: React.FC = () => {
           <button
             type="submit"
             className="bg-blue-500 text-white p-2 rounded"
-            disabled={isLoading}
-          >
-            Search Flights
+            disabled={isLoading}>
+            {isLoading ? "Searching..." : "Search Flights"}
           </button>
         </div>
-        <div>
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : (
-            <ul>
-              {flights?.map(flight => (
-                <li key={flight.id}>
-                  {flight?.origin} to {flight?.destination} on {flight.departureDate}
-                </li>
-              ))}
-            </ul>
-          )}
-          </div>
       </form>
+
+      {flights && flights.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-xl font-bold mb-4">Flight Results</h2>
+          {flights.map(flight => (
+            <div key={flight.id} className="border p-4 mb-4 rounded">
+              <div className="flex justify-between">
+                <div>
+                  <h3 className="font-semibold">
+                    {flight.itinerary.legs
+                      .map(leg => `${leg.origin} → ${leg.destination}`)
+                      .join(" | ")}
+                  </h3>
+                  <p>Airline: {flight.itinerary.legs[0].airline}</p>
+                </div>
+                <div>
+                  <p className="text-xl font-bold">
+                    {flight.price.amount} {flight.price.currency}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
