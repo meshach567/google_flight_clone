@@ -67,9 +67,9 @@ const FlightSearch: React.FC = () => {
             <div>Loading...</div>
           ) : (
             <ul>
-              {flights.map(flight => (
+              {flights?.map(flight => (
                 <li key={flight.id}>
-                  {flight.origin} to {flight.destination} on {flight.departureDate}
+                  {flight?.origin} to {flight?.destination} on {flight.departureDate}
                 </li>
               ))}
             </ul>
