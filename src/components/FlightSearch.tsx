@@ -6,23 +6,59 @@ const FlightSearch: React.FC = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [departureDate, setDepartureDate] = useState("");
+  const [error, setError] = useState('');
 
   const {performSearch, flights, isLoading} = useFlightSearch();
+
+  const validateSearch = (): boolean => {
+    // Reset previous errors
+    setError('');
+
+    // Check if all fields are filled
+    if (!origin || !destination || !departureDate) {
+      setError('Please fill in all fields');
+      return false;
+    }
+
+    // Validate airport codes (assuming 3-4 character codes)
+    const airportCodeRegex = /^[A-Z]{3,4}$/;
+    if (!airportCodeRegex.test(origin) || !airportCodeRegex.test(destination)) {
+      setError('Please use valid airport codes (e.g., L , LHR)');
+      return false;
+    }
+
+    // Validate date is in the future
+    const selectedDate = new Date(departureDate);
+    const today = new Date();
+    if (selectedDate <= today) {
+      setError('Please select a future date');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const legs: GoogleFlightLeg = {
-      origin,
-      destination,
-      date: departureDate,
-    };
-    performSearch([legs]);
+    if (validateSearch()) {
+      const leg: GoogleFlightLeg = {
+        origin, 
+        destination, 
+        date: departureDate
+      };
+      performSearch([leg]);
+    }
   };
   return (
     <div className="container mx-auto p-4">
       <form onSubmit={handleSearch} className="grid gap-4">
-        <h1 className="text-2xl font-bold">Flight Search</h1>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            {error}
+          </div>
+        )}
+
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Passengers
@@ -31,7 +67,7 @@ const FlightSearch: React.FC = () => {
             type="text"
             placeholder="Origin"
             value={origin}
-            onChange={e => setOrigin(e.target.value)}
+            onChange={e => setOrigin(e.target.value.toUpperCase())}
             className="border p-2 rounded"
           />
         </div>
@@ -44,7 +80,7 @@ const FlightSearch: React.FC = () => {
             type="text"
             placeholder="Destination"
             value={destination}
-            onChange={e => setDestination(e.target.value)}
+            onChange={e => setDestination(e.target.value.toUpperCase())}
             className="border p-2 rounded"
           />
         </div>
