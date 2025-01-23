@@ -1,22 +1,25 @@
 import axios from 'axios';
+import { GoogleFlightSearchOptions, GoogleFlightDetails } from '../types/googleflight';
 
-import { GoogleFlight, GoogleFlightSearchParams } from '../types/googleflight';
-
-const flightApi =  axios.create({
- baseURL: 'https://api.sandbox.google.com/flights/v1',
-  headers: { 
+const flightApi = axios.create({
+  baseURL: 'https://sky-scrapper.p.rapidapi.com/api/v1',
+  headers: {
     'x-rapidapi-key': import.meta.env.VITE_RAPID_API_KEY,
-    'x-rapidapi-host': import.meta.env.VITE_RAPID_API_HOST,
+    'x-rapidapi-host': import.meta.env.VITE_RAPID_API_HOST
   }
 });
 
-export const searchGoogleFlights  = async (params: GoogleFlightSearchParams): Promise<GoogleFlight[]> => {
-    try {
-        const response = await flightApi.get('/search', { params });
-        return response.data.flights;
-    } catch (error) {
-        console.error('Flight search not found', error);
-
-        throw new Error('Failed to fetch flight data');
-    }
-}
+export const searchFlights = async (options: GoogleFlightSearchOptions): Promise<GoogleFlightDetails[]> => {
+  try {
+    const response = await flightApi.get('/flights/getFlightDetails', {
+      params: {
+        ...options,
+        legs: JSON.stringify(options.legs)
+      }
+    });
+    return response.data.data || [];
+  } catch (error) {
+    console.error('Flight search error', error);
+    throw error;
+  }
+};

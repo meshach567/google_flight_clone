@@ -1,30 +1,34 @@
-export interface GoogleAirport {
-    code: string;
-    name: string;
-    city: string;
-}
-
-export interface GoogleFlightSegment {
-    departureTime: string,
-    arrivalTime: string,
-    duration: number;
-    airline: string,
-    flightNumber: string,
-}
-
-export interface GoogleFlight { 
-    id: string;
-    price: number;
-    departureAirport: GoogleAirport;
-    arrivalAirport: GoogleAirport;
-    segments: GoogleFlightSegment[];
-    stops: number;
-    totalDuration: number;
-}
-
-export interface GoogleFlightSearchParams {
+export interface GoogleFlightLeg {
     origin: string;
     destination: string;
-    departureDate: string;
-    passengers?: string;
- }
+    date: string;
+  }
+  
+  export interface GoogleFlightSearchOptions {
+    legs: GoogleFlightLeg[];
+    adults: number;
+    currency: string;
+    locale: string;
+    market: string;
+    cabinClass: 'economy' | 'business' | 'first';
+    countryCode: string;
+  }
+  
+  export interface GoogleFlightDetails {
+    id: string;
+    price: {
+      amount: number;
+      currency: string;
+    };
+    itinerary: {
+      legs: {
+        origin: string;
+        destination: string;
+        departureTime: string;
+        arrivalTime: string;
+        airline: string;
+        flightNumber: string;
+      }[];
+    };
+    totalDuration: number;
+  }
