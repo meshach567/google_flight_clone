@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+
 # google_flight_clone
 Responsive Google flight clone built with React, Vite, and axios
-=======
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -52,4 +52,3 @@ export default tseslint.config({
   },
 })
 ```
->>>>>>> 36549d6 (install-feat: install the deps)
