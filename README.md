@@ -128,3 +128,9 @@ export const searchFlights = async (params: {
 3. Set up state management
 4. Add routing
 5. Implement responsive design with Tailwind
+
+## Stay in touch
+
+- Author - [Meshach Arinze](meshacharinze@gmail.com)
+- Website - [devsfolio](https://devsfolio-nine.vercel.app/)
+- Linkedin - [Linkedin](https://linkedin.com/in/meshach-ekene)
