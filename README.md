@@ -28,3 +28,38 @@ echo "module.exports = {
   extends: ['@commitlint/config-conventional']
 }" > commitlint.config.js
 ```
+
+## Project Structure
+```
+flight-search/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── src/
+│   ├── components/
+│   │   ├── FlightSearch.tsx
+│   │   ├── FlightResults.tsx
+│   │   └── FlightCard.tsx
+│   │
+│   ├── hooks/
+│   │   └── useFlightSearch.ts
+│   │
+│   ├── services/
+│   │   └── flightApi.ts
+│   │
+│   ├── types/
+│   │   └── flight.ts
+│   │
+│   ├── utils/
+│   │   └── formatters.ts
+│   │
+│   ├── App.tsx
+│   └── main.tsx
+│
+├── .eslintrc.json
+├── .prettierrc
+├── tailwind.config.js
+└── vite.config.ts
+```
