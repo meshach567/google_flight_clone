@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { useFlightSearch } from "../hooks/useFlightSearch";
+import  useFlightSearch  from "../hooks/useFlightSearch";
 
 const FlightSearch: React.FC = () => {
   const [origin, setOrigin] = useState("");
@@ -74,6 +74,7 @@ const FlightSearch: React.FC = () => {
               ))}
             </ul>
           )}
+          </div>
       </form>
     </div>
   );
