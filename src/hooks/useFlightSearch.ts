@@ -2,39 +2,45 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { searchFlights } from '../services/flightApi';
-import { GoogleFlightDetails, GoogleFlightSearchOptions, GoogleFlightLeg } from '../types/googleflight';
+import { GoogleFlight, GoogleFlightSearchOptions } from '../types/googleflight';
 
 export const useFlightSearch = () => {
   const [searchOptions, setSearchOptions] = useState<GoogleFlightSearchOptions | null>(null);
 
   const { 
-    data: flights, 
+    data, 
     isLoading, 
     error, 
     refetch 
-  } = useQuery<GoogleFlightDetails[]>({
+  } = useQuery<GoogleFlight[]>({
     queryKey: ['flights', searchOptions],
-    queryFn: () => searchFlights(searchOptions!),
+    queryFn: async () => {
+      if (!searchOptions) throw new Error('Search options not set');
+      const response = await searchFlights(searchOptions);
+      return response?.data?.flights;
+    },
     enabled: !!searchOptions
   });
 
-  const performSearch = (legs: GoogleFlightLeg[]) => {
-    const defaultOptions: GoogleFlightSearchOptions = {
-      legs,
-      adults: 1,
-      currency: 'USD',
-      locale: 'en-US',
-      market: 'en-US',
-      cabinClass: 'economy',
-      countryCode: 'US'
+  const performSearch = (options: Omit<GoogleFlightSearchOptions, 'legs'> & { 
+    origin: string; 
+    destination: string; 
+    date: string 
+  }) => {
+    const searchOptionsPayload: GoogleFlightSearchOptions = {
+      ...options,
+      legs: [{
+        origin: options.origin,
+        destination: options.destination,
+        date: options.date
+      }]
     };
-
-    setSearchOptions(defaultOptions);
+    setSearchOptions(searchOptionsPayload);
     refetch();
   };
 
   return { 
-    flights, 
+    flights: data, 
     isLoading, 
     error, 
     performSearch 

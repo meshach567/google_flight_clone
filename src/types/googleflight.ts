@@ -1,34 +1,49 @@
-export interface GoogleFlightLeg {
-    origin: string;
-    destination: string;
-    date: string;
-  }
-  
-  export interface GoogleFlightSearchOptions {
-    legs: GoogleFlightLeg[];
-    adults: number;
+export interface GoogleLeg {
+  origin: string;
+  destination: string;
+  date: string;
+}
+
+export interface GoogleFlightSearchOptions {
+  legs: GoogleLeg[];
+  adults: number;
+  currency: string;
+  locale: string;
+  market: string;
+  cabinClass: string;
+  countryCode: string;
+}
+
+export interface GoogleFlight {
+  id: string;
+  price: {
+    amount: number;
     currency: string;
-    locale: string;
-    market: string;
-    cabinClass: 'economy' | 'business' | 'first';
-    countryCode: string;
-  }
-  
-  export interface GoogleFlightDetails {
-    id: string;
-    price: {
-      amount: number;
-      currency: string;
+  };
+  itinerary: {
+    outbound: {
+      carrier: {
+        name: string;
+        code: string;
+      };
+      origin: {
+        code: string;
+        name: string;
+      };
+      destination: {
+        code: string;
+        name: string;
+      };
+      departureTime: string;
+      arrivalTime: string;
     };
-    itinerary: {
-      legs: {
-        origin: string;
-        destination: string;
-        departureTime: string;
-        arrivalTime: string;
-        airline: string;
-        flightNumber: string;
-      }[];
-    };
-    totalDuration: number;
-  }
+  };
+  tags: string[];
+}
+
+export interface GoogleFlightSearchResponse {
+  data: {
+    flights: GoogleFlight[];
+    status: boolean;
+  };
+}

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useFlightSearch} from "../hooks/useFlightSearch";
-import {GoogleFlightLeg} from "../types/googleflight";
+import {GoogleLeg} from "../types/googleflight";
 
 const FlightSearch: React.FC = () => {
   const [origin, setOrigin] = useState("");
@@ -42,7 +42,7 @@ const FlightSearch: React.FC = () => {
     e.preventDefault();
 
     if (validateSearch()) {
-      const leg: GoogleFlightLeg = {
+      const leg: GoogleLeg = {
         origin, 
         destination, 
         date: departureDate
@@ -115,11 +115,11 @@ const FlightSearch: React.FC = () => {
               <div className="flex justify-between">
                 <div>
                   <h3 className="font-semibold">
-                    {flight.itinerary.legs
+                    {flight?.itinerary?.legs
                       .map(leg => `${leg.origin} → ${leg.destination}`)
                       .join(" | ")}
                   </h3>
-                  <p>Airline: {flight.itinerary.legs[0].airline}</p>
+                  <p>Airline: {flight?.itinerary?.legs[0].airline}</p>
                 </div>
                 <div>
                   <p className="text-xl font-bold">

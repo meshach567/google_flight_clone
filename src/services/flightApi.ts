@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GoogleFlightSearchOptions, GoogleFlightDetails } from '../types/googleflight';
+import { GoogleFlightSearchOptions, GoogleFlightSearchResponse } from '../types/googleflight';
 
 const flightApi = axios.create({
   baseURL: 'https://sky-scrapper.p.rapidapi.com/api/v1',
@@ -9,7 +9,7 @@ const flightApi = axios.create({
   }
 });
 
-export const searchFlights = async (options: GoogleFlightSearchOptions): Promise<GoogleFlightDetails[]> => {
+export const searchFlights = async (options: GoogleFlightSearchOptions): Promise<GoogleFlightSearchResponse[]> => {
   try {
     const response = await flightApi.get('/flights/getFlightDetails', {
       params: {
@@ -17,7 +17,7 @@ export const searchFlights = async (options: GoogleFlightSearchOptions): Promise
         legs: JSON.stringify(options.legs)
       }
     });
-    return response.data.data || [];
+    return response.data;
   } catch (error) {
     console.error('Flight search error', error);
     throw error;
