@@ -3,7 +3,6 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import FlightSearch from "./components/FlightSearch";
 
 const queryClient = new QueryClient();
-import "./App.css";
 
 const App: React.FC = () => {
   return (
