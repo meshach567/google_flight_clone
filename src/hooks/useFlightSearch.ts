@@ -1,26 +1,42 @@
-import  { useState } from 'react';
+// src/hooks/useFlightSearch.ts
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { GoogleFlight, GoogleFlightSearchParams } from '../types/googleflight';
-import { searchGoogleFlights } from '../services/flightApi';
+import { searchFlights } from '../services/flightApi';
+import { GoogleFlightDetails, GoogleFlightSearchOptions, GoogleFlightLeg } from '../types/googleflight';
 
-const useFlightSearch = () => {
-  const [searchParams, setSearchParams] = useState<GoogleFlightSearchParams | null>(null);
-  const { data: flights, isLoading, error, refetch } = useQuery<GoogleFlight[]>({
-    queryKey: ['flights', searchParams],
-    queryFn: () =>  searchGoogleFlights(searchParams!),
-      enabled: !!searchParams
-});
+export const useFlightSearch = () => {
+  const [searchOptions, setSearchOptions] = useState<GoogleFlightSearchOptions | null>(null);
 
-  const performSearch = (params: GoogleFlightSearchParams) => {
-    setSearchParams(params);
+  const { 
+    data: flights, 
+    isLoading, 
+    error, 
+    refetch 
+  } = useQuery<GoogleFlightDetails[]>({
+    queryKey: ['flights', searchOptions],
+    queryFn: () => searchFlights(searchOptions!),
+    enabled: !!searchOptions
+  });
+
+  const performSearch = (legs: GoogleFlightLeg[]) => {
+    const defaultOptions: GoogleFlightSearchOptions = {
+      legs,
+      adults: 1,
+      currency: 'USD',
+      locale: 'en-US',
+      market: 'en-US',
+      cabinClass: 'economy',
+      countryCode: 'US'
+    };
+
+    setSearchOptions(defaultOptions);
     refetch();
-  }
+  };
+
   return { 
     flights, 
     isLoading, 
     error, 
     performSearch 
   };
-}
-
-export default useFlightSearch
+};
