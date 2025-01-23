@@ -112,3 +112,19 @@ export const searchFlights = async (params: {
   }
 };
 ```
+
+## Performance & Best Practices
+- Use React Query for state management and caching
+- Implement code splitting with React.lazy
+- Use TypeScript for type safety
+- Leverage Vite's fast build and HMR
+- Implement proper error boundaries
+- Use React hooks for component logic
+```
+
+## Next Steps
+1. Implement components
+2. Configure API integration
+3. Set up state management
+4. Add routing
+5. Implement responsive design with Tailwind
